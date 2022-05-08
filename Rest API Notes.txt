@@ -1,0 +1,20 @@
+What is Rest API ?
+
+REpresentational State Transfer Application Programming Interface
+
+A Restful API is an architectural style for an application program interface(API) that uses HTTP requests to access and use data. REST is not a programming language.
+
+PUT = For entire field update
+PATCH = For single field update 
+
+"start": "node index.js",
+"dev": "nodemon index.js"
+
+index.js
+const contactRouter = require("./routers/routes")
+app.use(contactRouter)
+
+routes.js
+const router = new express.Router();
+router.get();
+module.exports = router;

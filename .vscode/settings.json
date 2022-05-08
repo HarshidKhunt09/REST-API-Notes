@@ -1,0 +1,9 @@
+{
+    "spellchecker.ignoreWordsList": [
+        "nodemon",
+        "const",
+        "contactRout",
+        "contactRouter",
+        "outes"
+    ]
+}
