@@ -17,7 +17,7 @@ const Contact = mongoose.model('Contact', ContactSchema);
 
 export const addNewContact = async (req, res) =>{
     try{
-        let  newContact = new Contact(req.body);
+        let newContact = new Contact(req.body);
 
         const contact = await newContact.save();
         res.status(201).send(contact);

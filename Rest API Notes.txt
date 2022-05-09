@@ -18,3 +18,5 @@ routes.js
 const router = new express.Router();
 router.get();
 module.exports = router;
+
+Add a .env into the .gitignore.
