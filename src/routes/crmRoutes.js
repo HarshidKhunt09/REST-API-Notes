@@ -2,8 +2,12 @@ import { addNewContact,
          getContacts,
          getContactWithID,
          updateContact,
-         deleteContact
+         deleteContact,
+         signin,
+         signup,
+         about
 } from "../controllers/crmController";
+import { authenticate } from "../../middleware/authenticate";
 
 const routes = (app) => {
     app.route('/contact')
@@ -22,6 +26,15 @@ const routes = (app) => {
         .put(updateContact)
 
         .delete(deleteContact);
+
+    app.route('/signup')
+        .post(signup);
+
+    app.route('/signin')
+        .post(signin);
+
+    app.route('/about')
+        .get(authenticate, about);
 }
 
 export default routes;

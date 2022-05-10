@@ -1,8 +1,9 @@
+import bcrypt from "bcryptjs";
 import mongoose from "mongoose";
 import { ContactSchema } from "../models/crmModel";
 
 // Create a new collection
-const Contact = mongoose.model('Contact', ContactSchema);
+export const Contact = mongoose.model('Contact', ContactSchema);
 
 // export const addNewContact = (req, res) => {
 //     let  newContact = new Contact(req.body);
@@ -106,3 +107,61 @@ export const deleteContact = async (req, res) => {
     }
 }
 
+export const signup = async (req, res) =>{
+    try{
+        let newContact = new Contact(req.body);
+
+        if(newContact.password != newContact.cpassword){
+            return res.status(422).json({ error: "Password are not matching" });
+        }else{
+            
+            newContact.password = await bcrypt.hash(newContact.password, 12);
+            newContact.cpassword = await bcrypt.hash(newContact.cpassword, 12);
+
+            const contact = await newContact.save();
+            res.status(201).send(contact);
+        }
+    }catch(e){
+        res.status(400).send(e);
+    }
+}
+
+export const signin = async (req, res) => {
+    try{
+        let token;
+        const { email, password } = req.body;
+
+        if(!email || !password){
+            return res.status(400).json({ error: "Plz filled the data" });
+        }
+
+        const userlogin = await Contact.findOne({ email: email });
+
+        if(userlogin){
+            const isMatch = await bcrypt.compare(password, userlogin.password);
+
+            token = await userlogin.generateAuthToken();
+            console.log(token);
+
+            res.cookie("jwttoken", token, {
+                expires:new Date(Date.now() + 25892000000),
+                httpOnly:true
+            });
+
+            if(!isMatch) {
+                res.status(400).json({ error: "Invalid Credentials" });
+            }else {
+                res.json({ message: "user signin successfully" });
+            }
+        }else{
+            res.status(400).json({ error: "Invalid Credentials" });
+        }
+    }catch(e){
+        console.log(e);
+    }
+}
+
+export const about = (req, res) => {
+    console.log("Hello my about");
+    res.send(req.rootUser);
+}

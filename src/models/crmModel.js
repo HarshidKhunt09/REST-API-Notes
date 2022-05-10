@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import validator from "validator";
+import jwt from "jsonwebtoken";
 
 const Schema = mongoose.Schema;
 
@@ -43,5 +44,24 @@ export const ContactSchema = new Schema({
     created_date: {
         type: Date,
         default: Date.now
-    }
+    },
+    tokens: [
+        {
+            token: {
+                type: String,
+                required: true
+            }
+        }
+    ]
 });
+
+ContactSchema.methods.generateAuthToken = async function(){
+    try{
+        let token = jwt.sign({_id:this._id}, process.env.SECRET_KEY);
+        this.tokens = this.tokens.concat({ token: token });
+        await this.save();
+        return token;
+    }catch(e){
+        console.log(e);
+    }
+}
